@@ -70,7 +70,7 @@ the DuckDB physical plan.
  
 `python main.py benchmark` runs each query 5 times on warm caches and
 reports the median. Sample output from a run on the real 371 MB Kaggle
-CSV (122,611 rows, MacBook Pro):
+CSV (122,611 rows, M4 MacBook Pro):
  
 ```
 Using CSV:   data/games.csv
