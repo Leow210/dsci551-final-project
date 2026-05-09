@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Generated data & database
+# Critical: real CSV is 389 MB, don't commit
+data/games.csv
+data/steam_games_synthetic.csv
+data/*.duckdb
+data/*.duckdb.wal
+data/*.parquet
+
+src/explain_demo.py
+DEMO_TALKING_POINTS.md
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
