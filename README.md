@@ -51,6 +51,26 @@ The first run loads the CSV into a persistent DuckDB file
 (`data/steam.duckdb`, ~2 s for synthetic, ~20 s for the real file).
 Subsequent runs reuse it.
 
+### When to run `reset`
+ 
+Run `python main.py reset` and then re-launch the app (run `python main.py` again) if you hit any of
+these:
+ 
+- **`Catalog Error: Table with name games does not exist`**: usually
+  caused by launching `python main.py` before the CSV was in place.
+  DuckDB created an empty `.duckdb` file on that first run and now
+  treats the database as already-initialized even though no data was
+  ever loaded. `reset` clears it so the next launch reloads the CSV.
+- **You swapped CSVs** (e.g. switched from synthetic to the real
+  Kaggle file, or regenerated the synthetic file with different
+  parameters). The persistent DB still holds the old data; reset to
+  rebuild against the new CSV.
+- **CSV load was interrupted** (Ctrl-C during the initial load). The
+  table may be partially populated. Reset to start clean.
+After reset the next `python main.py` will go through the full CSV
+load again and print `[setup] First run — loading CSV: ...`.
+
+
 ## What the CLI does
 
 Five canned discovery queries with parameters:
