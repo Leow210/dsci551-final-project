@@ -3,7 +3,7 @@
 **DSCI 551 Course Project Spring 2026**
 **Author:** Leo Rosales (solo project)
 **Database:** [DuckDB](https://duckdb.org/) (embedded columnar OLAP)
-**Dataset:** Steam Games dataset (Kaggle) — ~100k rows, 40 columns
+**Dataset:** Steam Games dataset (Kaggle) ~100k rows, 40 columns
 
 An interactive CLI that runs five discovery queries over the Steam catalog,
 each one mapped to a specific DuckDB internal (columnar storage,
