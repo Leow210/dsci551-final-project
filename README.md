@@ -1,6 +1,6 @@
 # Steam Game Discovery Engine
 
-**DSCI 551 Course Project — Spring 2026**
+**DSCI 551 Course Project Spring 2026**
 **Author:** Leo Rosales (solo project)
 **Database:** [DuckDB](https://duckdb.org/) (embedded columnar OLAP)
 **Dataset:** Steam Games dataset (Kaggle) — ~100k rows, 40 columns
@@ -16,8 +16,8 @@ Requirements: Python 3.10+ and pip. No API keys, no environment variables,
 no external services.
 
 ```bash
-git clone <this-repo>
-cd steam_discovery
+git clone git@github.com:Leow210/dsci551-final-project.git
+cd dsci551-final-project
 pip install -r requirements.txt
 ```
 
@@ -26,12 +26,12 @@ pip install -r requirements.txt
 Pick **one** of the two options. The loader auto-detects which CSV is
 present and uses it; you do not need to configure anything.
 
-**Option A — Real Kaggle dataset (~389 MB).**
+**Option A: Real Kaggle dataset (~389 MB).**
 Download from
 [kaggle.com/datasets/fronkongames/steam-games-dataset](https://www.kaggle.com/datasets/fronkongames/steam-games-dataset)
 and save the CSV as `data/games.csv`.
 
-**Option B — Synthetic dataset (no download needed).**
+**Option B: Synthetic dataset (no download needed).**
 ```bash
 python data/generate_data.py
 ```
@@ -67,12 +67,33 @@ Each query prints its SQL, parameters, a result table, and (optionally)
 the DuckDB physical plan.
 
 ## Reproducing results
-
-The report's benchmark numbers come from `python main.py benchmark`,
-which runs each query 5 times on warm caches and reports the median.
-Numbers vary on every run with the dataset size (real vs synthetic) and machine, but
-the relative shape, large speedups on aggregations, smaller
-on the more selective filters, is reproducible.
+ 
+`python main.py benchmark` runs each query 5 times on warm caches and
+reports the median. Sample output from a run on the real 371 MB Kaggle
+CSV (122,611 rows, MacBook Pro):
+ 
+```
+Using CSV:   data/games.csv
+CSV size:    371.1 MB
+DuckDB file: 567.3 MB (153% of CSV)
+DuckDB warm open:  11 ms
+pandas read_csv + derived cols: 4,605 ms (122,611 rows x 44 cols)
+ 
+Query                       DuckDB (ms)   pandas (ms)   Speedup
+---------------------------------------------------------------
+Q1: Filtered Search                7.8          27.3       3.5x
+Q2: Genre Aggregation              8.1         134.0      16.6x
+Q3: Top-N by Tag                  13.0          53.6       4.1x
+Q4: Hidden Gems                    4.3           6.8       1.6x
+Q5: Studio Leaderboard             7.4         333.9      45.3x
+---------------------------------------------------------------
+Geomean speedup                                            7.0x
+```
+ 
+DuckDB wins on every query. The largest gaps are on the aggregations
+(Q2, Q5); the smallest is on the most selective filter (Q4) where
+there's less data for the vectorized engine to amortize over. Absolute
+numbers vary, but relative shape is reproducible.
 
 ## Project structure
 
